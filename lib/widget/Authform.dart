@@ -1,0 +1,108 @@
+//import 'dart:html';
+
+import 'package:profile/widget/original_button.dart';
+import 'package:flutter/material.dart';
+import 'package:profile/ui/AuthScreen.dart';
+import 'package:email_validator/email_validator.dart';
+
+import '../../services/auth.dart';
+
+
+class Authform extends StatefulWidget {
+  final AuthType authType;
+  const Authform({Key? key,required this.authType}) : super(key: key);
+  //const Authform({Key? key}) : super(key: key);
+
+  @override
+  State<Authform> createState() => _AuthformState();
+}
+
+class _AuthformState extends State<Authform> {
+  final _formKey =GlobalKey<FormState>();
+  String _email ='',_password='';
+  AuthBase authBase = AuthBase();
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+        key: _formKey,
+        child:Padding(
+          padding: const EdgeInsets.symmetric(horizontal:40 ),
+          child: Column(children: [
+            SizedBox(height:16),
+            TextFormField(
+              onChanged:(value) => _email = value ,
+              decoration: InputDecoration(
+                  labelText:'Enter your email' ,
+                  hintText:'ex:test@gmail.com'
+              ),
+              validator:(value)=>value!.isEmpty ? 'Enter your email':null,
+              /*{
+              if (value != RegExp(r'^[\w-]+@([\w-]+\.)+[\w]{2,4}').hasMatch(value!)){
+               //value != RegExp(r'^[\w-]+@([\w-]+\.)+[\w]{2,4}').hasMatch(value!)
+              return null;
+             }
+             else{
+               return 'enter valid email';
+             }
+
+
+
+               }*/
+            ),
+
+            SizedBox(height:12),
+            TextFormField(
+              onChanged:(value)=>_password = value ,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText:'Enter your password' ,
+              ),
+
+              validator:(value)=>value!.length < 6 ? 'Enter your passord 6+ chars long':null,
+              //{ if (value == null) {return 'Please enter some text';}
+              //if (value.length < 6) {return 'Must be more than 2 charater';}},
+
+            ),
+            SizedBox(height: 18,),
+            OriginalButton(
+                text:widget.authType==AuthType.login?'Login':'register',
+                onPressesd:() async {
+                  if(_formKey.currentState!.validate()){
+                    if(widget.authType == AuthType.login)
+                      await authBase.loginWithEmailAndPassword(_email, _password);
+                      Navigator.of(context).pushReplacementNamed('home');
+                  }
+                  else{
+                    await  authBase.registerWithEmailAndPassword(_email, _password);
+                    Navigator.of(context).pushReplacementNamed('home');
+                  }
+
+                },
+                textColor: Colors.white,
+                bgColor:Colors.lightBlueAccent),
+            SizedBox(height: 5,),
+            FlatButton(
+                onPressed: () {
+
+                  if (widget.authType == AuthType.login)
+                    Navigator.of(context).pushReplacementNamed('register');
+                  else
+                    Navigator.of(context).pushReplacementNamed('login');
+                }
+
+                ,
+                child: Text(
+                  widget.authType==AuthType.login? 'Don\`t have an account':
+                  'you have an account',
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize:18,
+                  ),
+                )
+            )
+          ],),
+        ) );
+  }
+}
