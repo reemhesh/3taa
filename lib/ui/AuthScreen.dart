@@ -32,15 +32,17 @@ class AuthScreen extends StatelessWidget {
                   Column(
                     children: [
                       SizedBox(height: 100,),
-                      Text("Hello!"
-                          , style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 29,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 1.2,
-                          )
+                      Center(
+                        child: Text("Hello!"
+                            , style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 29,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1.2,
+                            )
+                        ),
                       ),
-                      Image.asset('images/images (2).png', height: 290,)
+                      Center(child: Image.asset('images/images (2).png', height: 290,))
 
 
                     ],

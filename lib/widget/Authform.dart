@@ -19,7 +19,7 @@ class Authform extends StatefulWidget {
 
 class _AuthformState extends State<Authform> {
   final _formKey =GlobalKey<FormState>();
-  String _email ='',_password='';
+  String _email ='',_password='',error="";
   AuthBase authBase = AuthBase();
 
 
@@ -37,19 +37,23 @@ class _AuthformState extends State<Authform> {
                   labelText:'Enter your email' ,
                   hintText:'ex:test@gmail.com'
               ),
-              validator:(value)=>value!.isEmpty ? 'Enter your email':null,
-              /*{
-              if (value != RegExp(r'^[\w-]+@([\w-]+\.)+[\w]{2,4}').hasMatch(value!)){
-               //value != RegExp(r'^[\w-]+@([\w-]+\.)+[\w]{2,4}').hasMatch(value!)
-              return null;
-             }
-             else{
-               return 'enter valid email';
-             }
+              validator: (value) {
+                if (value== null || value.isEmpty) {
+                  return 'Enter your Email';
+                }
+
+                if (!RegExp(
+                    r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                    .hasMatch(value)) {
+                  return 'Please enter a valid email Address';
+                }
+
+                return null;
+              },
 
 
 
-               }*/
+
             ),
 
             SizedBox(height:12),
@@ -69,16 +73,17 @@ class _AuthformState extends State<Authform> {
             OriginalButton(
                 text:widget.authType==AuthType.login?'Login':'register',
                 onPressesd:() async {
-                  if(_formKey.currentState!.validate()){
-                    if(widget.authType == AuthType.login)
-                      await authBase.loginWithEmailAndPassword(_email, _password);
+                  if (_formKey.currentState!.validate()) {
+                    if (widget.authType == AuthType.login) {
+                      await authBase.loginWithEmailAndPassword(
+                          _email, _password);
                       Navigator.of(context).pushReplacementNamed('home');
+                    } else {
+                      await authBase.registerWithEmailAndPassword(
+                          _email, _password);
+                      Navigator.of(context).pushReplacementNamed('home');
+                    }
                   }
-                  else{
-                    await  authBase.registerWithEmailAndPassword(_email, _password);
-                    Navigator.of(context).pushReplacementNamed('home');
-                  }
-
                 },
                 textColor: Colors.white,
                 bgColor:Colors.lightBlueAccent),
