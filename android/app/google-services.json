@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "149896464109",
-    "project_id": "delicato-bcb01",
-    "storage_bucket": "delicato-bcb01.appspot.com"
+    "project_number": "1084599954475",
+    "project_id": "taa1-bbc3c",
+    "storage_bucket": "taa1-bbc3c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:149896464109:android:ba47cea12a7de9ac842ee4",
+        "mobilesdk_app_id": "1:1084599954475:android:9aa003eed81d36456b4e6e",
         "android_client_info": {
           "package_name": "com.example.profile"
         }
       },
       "oauth_client": [
         {
-          "client_id": "149896464109-7h24m5atc58secoscur0fu5igisdp9bo.apps.googleusercontent.com",
+          "client_id": "1084599954475-q19l42bmss7tg1sjuareghp85nfajrbc.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAY0alGMoxrcfBLXxl_R7aUQK1GNhvuD6E"
+          "current_key": "AIzaSyB6R8MvB2C5HPbkaJ73clbT2akOxzPeYyQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "149896464109-7h24m5atc58secoscur0fu5igisdp9bo.apps.googleusercontent.com",
+              "client_id": "1084599954475-q19l42bmss7tg1sjuareghp85nfajrbc.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
