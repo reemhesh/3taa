@@ -3,8 +3,11 @@ import 'dart:math';
 import'package:flutter/material.dart';
 import'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:profile/ui/Body.dart';
+import 'dart:convert';
+import 'package:profile/ui/profile.dart';
+
+import '../ui/editprofile.dart';
 
 class donateForm extends StatefulWidget {
   @override
@@ -183,6 +186,7 @@ class donateFormState extends State<donateForm> {
                   onPressed:  () {
                     if (_formKey.currentState!.validate()) {
                       writeData();
+                      //addnewDonation();
                       Navigator.of(context).pushNamed('submit');
                       _sendDataToSecondScreen(context);
 
@@ -210,36 +214,47 @@ class donateFormState extends State<donateForm> {
     // Please replace the Database URL
     // which we will get in “Add Realtime
     // Database” step with DatabaseURL
-    var url = "https://taa1-bbc3c-default-rtdb.firebaseio.com/"+"data.json";
 
-    // (Do not remove “data.json”,keep it as it is)
-    try {
+    final donation = <String, dynamic>{
 
-      final response = await http.post(
-        Uri.parse(url),
-        body: json.encode({
-          'Donation':'added',
-          "name": _name,
-          'email': _email,
-          'country':_country,
-          'PhoneNo':_phoneNumber,
-          'MedNameDonated':_medName,
-          'MedAmountDonated':_medAmount,
-          'needed':false,
-          'delivered':false,
-          'donated':true,
-          'expired':false
-//'PrescriptionImg':_prescriptionImg,
-        }),
-
-      );
+      "name": _name,
+      'email': _email,
+      'country': _country,
+      'PhoneNo': _phoneNumber,
+      'MedNameDonated': _medName,
+      'MedAmountDonated': _medAmount,
+      'needed': false,
+      'delivered': false,
+      'donated': true
+    };
+    final Storage = <String, dynamic>{
 
 
-    } catch (error) {
-      throw error;
-    }
+      'MedNameDonated': _medName,
+      'MedAmountDonated': _medAmount,
+      'needed': false,
+      'delivered': false,
+      'donated': true
+    };
+
+
+    database
+        .child('Donor_list')
+        .push()
+        .set(donation)
+        .then((_) => print('donation has been written!'))
+        .catchError(
+            (e) => print('you have an error $e')
+    );
+    database
+        .child('Storage')
+        .push()
+        .set(Storage)
+        .then((_) => print('donation has been written!'))
+        .catchError(
+            (e) => print('you have an error $e')
+    );
   }
-
   void _sendDataToSecondScreen(BuildContext context) {
     String textToSend = _name;
     String textToSend2 = _email;
@@ -247,52 +262,14 @@ class donateFormState extends State<donateForm> {
     String textToSend4 = _medName;
     String textToSend5 = _medAmount;
     String textToSend6 = _country;
+    print('name' +_name + 'email'+_email);
 
+    Navigator.push(context, MaterialPageRoute( builder: (context) => EditProfilePage(account: textToSend,
+        email:textToSend2,phone:textToSend3,gov:textToSend6, med:  _medName+_medAmount,paths:null),));
 
-    Navigator.push(context, MaterialPageRoute( builder: (context) => Body(account: textToSend,
-        med:textToSend4+' '+textToSend5,email:textToSend2,phone:textToSend3,paths: " ",gov:textToSend6
-    ),));
   }
+
 }
 
-//  await dailySpecialRef.set({'expired':true});
-// await dailySpecialRef.update({'expired':true,'deleivered':false});
-/*
-                                      ()async{      await database.update(
-                                   if (_formKey.currentState!.validate()) {
-
-                              try{
-
-                              await dailySpecialRef
-                                  .set({"name": _name,
-                                          'email': _email,
-                                          'country':_country,
-                                          'PhoneNo':_phoneNumber,
-                                          'MedName':_medName,
-                                           'MedAmount':_medAmount,
-                              });
-                              print('Donation Done');
-
-                              }
-
-                              catch(e){
-                              print('you got an error! $e');
-                              }
-
-    }           {
-                                                'dailySpecialRef/expired':true,
-                                                'someotherdata/expired':false
-                                              });
-                                            */
-
-// If the form is valid, display a snackbar. In the real world,
-// you'd often call a server or save the information in a database
-// ScaffoldMessenger.of(context).showSnackBar(
-//   const SnackBar(content: Text('Processing Data')),
-// );
 
 
-
-
-
-//  _formKey.currentState.save();
