@@ -1,9 +1,10 @@
 //import 'dart:html';
 
+import 'package:firebase_database/firebase_database.dart';
+import 'package:profile/ui/AuthScreen.dart';
 import 'package:profile/widget/original_button.dart';
 import 'package:flutter/material.dart';
-import 'package:profile/ui/AuthScreen.dart';
-import 'package:email_validator/email_validator.dart';
+
 
 import '../../services/auth.dart';
 
@@ -19,7 +20,7 @@ class Authform extends StatefulWidget {
 
 class _AuthformState extends State<Authform> {
   final _formKey =GlobalKey<FormState>();
-  String _email ='',_password='',error="";
+  String _email ='',_password='',error="",_name='';
   AuthBase authBase = AuthBase();
 
 
@@ -31,6 +32,23 @@ class _AuthformState extends State<Authform> {
           padding: const EdgeInsets.symmetric(horizontal:40 ),
           child: Column(children: [
             SizedBox(height:16),
+    TextFormField(
+    onChanged:(value)=>_name = value ,
+    obscureText: true,
+    decoration: InputDecoration(
+    labelText:'Enter your name' ,
+    ),
+
+    validator: (value) {
+      if (value == null || value.isEmpty) {
+        return 'Enter your Email';
+      }
+    }
+
+    //{ if (value == null) {return 'Please enter some text';}
+    //if (value.length < 6) {return 'Must be more than 2 charater';}},
+
+    ),
             TextFormField(
               onChanged:(value) => _email = value ,
               decoration: InputDecoration(
@@ -69,6 +87,7 @@ class _AuthformState extends State<Authform> {
               //if (value.length < 6) {return 'Must be more than 2 charater';}},
 
             ),
+
             SizedBox(height: 18,),
             OriginalButton(
                 text:widget.authType==AuthType.login?'Login':'register',
@@ -76,11 +95,13 @@ class _AuthformState extends State<Authform> {
                   if (_formKey.currentState!.validate()) {
                     if (widget.authType == AuthType.login) {
                       await authBase.loginWithEmailAndPassword(
-                          _email, _password);
+                          _email, _password,_name);
                       Navigator.of(context).pushReplacementNamed('home');
                     } else {
+                      //user recorded in data
+                      writeData();
                       await authBase.registerWithEmailAndPassword(
-                          _email, _password);
+                          _email, _password,_name);
                       Navigator.of(context).pushReplacementNamed('home');
                     }
                   }
@@ -110,4 +131,25 @@ class _AuthformState extends State<Authform> {
           ],),
         ) );
   }
+  void writeData() async {
+
+    final User = <String, dynamic>{
+
+
+      'name': _name,
+      'email': _email,
+      "password": _password,
+
+    };
+    FirebaseDatabase.instance.reference()
+        .child('User')
+        .push()
+        .set(User)
+        .then((_) => print('user recorded'))
+        .catchError(
+            (e) => print('you have an error $e')
+    );
+
+  }
+
 }
