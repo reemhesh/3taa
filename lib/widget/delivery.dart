@@ -3,8 +3,9 @@ import 'dart:math';
 import'package:flutter/material.dart';
 import'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:profile/ui/Body.dart';
+import 'dart:convert';
+import 'package:profile/ui/profile.dart';
 
 class deliverForm extends StatefulWidget {
   @override
@@ -22,38 +23,7 @@ class deliverFormState extends State<deliverForm> {
 
   // String _medImage='';
   String _pathsFromTo = '';
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  void writeData() async {
-    _formKey.currentState?.save();
-    //print('Patient recoreded');
-    //Navigator.of(context).pushNamed('/submit');
-    // Please replace the Database URL
-    // which we will get in “Add Realtime
-    // Database” step with DatabaseURL
-    var url = "https://taa1-bbc3c-default-rtdb.firebaseio.com/ ";
-
-    // (Do not remove “data.json”,keep it as it is)
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        body: json.encode({
-          'Delviering_person':'added',
-          "name": _name,
-          'email': _email,
-          'country':_country,
-          'PhoneNo':_phoneNumber,
-          'pathsfromto':_pathsFromTo,
-          'delivered':false
-
-//'PrescriptionImg':_prescriptionImg,
-        }),
-      );
-
-    } catch (error) {
-      throw error;
-    }
-  }
 
   Widget _buildName() {
     return TextFormField(
@@ -227,17 +197,75 @@ class deliverFormState extends State<deliverForm> {
     String textToSend = _name;
     String textToSend2 = _email;
     String textToSend3 = _phoneNumber;
-    String textToSend4 = _pathsFromTo;
-    String textToSend5 = _country;
+    String textToSend6 = _country;
+    String textToSend7 = _pathsFromTo;
 
 
-    print('name' +_name + 'email'+_email);
+    Navigator.push(context, MaterialPageRoute( builder: (context) =>Body(account: textToSend,
+        email:textToSend2,phone:textToSend3,gov:textToSend6, med:  null,paths:textToSend7),));
 
-    Navigator.push(context, MaterialPageRoute( builder: (context) => Body(account: textToSend,
-    med:'',email:textToSend2,phone:textToSend3,paths: textToSend4,gov:textToSend5
-    ),));
   }
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  void writeDa() async {
+    _formKey.currentState?.save();
+    //print('Patient recoreded');
+    //Navigator.of(context).pushNamed('/submit');
+    // Please replace the Database URL
+    // which we will get in “Add Realtime
+    // Database” step with DatabaseURL
+    var url = "https://taa1-bbc3c-default-rtdb.firebaseio.com/ ";
+
+    // (Do not remove “data.json”,keep it as it is)
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: json.encode({
+          'Delviering_person':'added',
+          "name": _name,
+          'email': _email,
+
+
+//'PrescriptionImg':_prescriptionImg,
+        }),
+      );
+
+    } catch (error) {
+      throw error;
+    }
+  }
+  void writeData() async {
+    _formKey.currentState?.save();
+    final delivery_list = <String, dynamic>{
+      "name": _name,
+      'email': _email,
+      'PhoneNo': _phoneNumber,
+      'country': _country,
+      'pathsfromto': _pathsFromTo,
+
+    };
+
+
+  FirebaseDatabase.instance.reference()
+      .child('User')
+      .child('Deliveriers_list')
+      .push()
+      .set(delivery_list)
+      .then((_)=>print('donation has been written!'))
+      .catchError(
+  (e)=>print('you have an error $e')
+  );
+  }
+    /* database
+        .child('Storage')
+        .get()
+        .then((_)=>print(Storage as List))
+        .catchError(
+            (e)=>print('you have an error $e')
+    );*/
 
 }
+
+
 
 

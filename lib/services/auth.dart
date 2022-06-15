@@ -18,8 +18,11 @@ class AuthBase{
     //Users(uid);
   }
   final FirebaseAuth _auth= FirebaseAuth.instance;
+
+
+
   Future<Users?> registerWithEmailAndPassword(
-      String email,String password) async{
+      String email,String password,String name) async{
     try{
       final authResult = await  _auth
           .createUserWithEmailAndPassword(email: email, password: password);
@@ -32,14 +35,14 @@ class AuthBase{
     }
   }
     Future<Users?> loginWithEmailAndPassword(String email,
-        String password) async
+        String password,String name) async
     {
       try {
-        //final authResult =
-                 //await _auth
-               //     .signInWithEmailAndPassword(email: email, password: password);
-        //return _userFromFireBase(authResult.user!);
-        return  await registerWithEmailAndPassword( email, password);
+        final authResult =
+                 await _auth
+                    .signInWithEmailAndPassword(email: email, password: password);
+        return _userFromFireBase(authResult.user!);
+       // return  await registerWithEmailAndPassword( email, password);
       }
       catch (e) {
         print('Here is the error'+e.toString());
