@@ -11,7 +11,7 @@ We use **Flutter** and connected to **Firebase Database RealTime**
 
 and too we use **firebase-auth** to sign-in and registeration
 
-and we try to put the firebase_Storage to uploading and downloading images 
+and we try to put the **firebase_Storage** to uploading and downloading images 
 
 Application depends on scanner for *barcode* medications
 
